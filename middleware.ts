@@ -1,10 +1,6 @@
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-// Auth sessions (JWTs) expire. This middleware runs on EVERY
-// request and silently refreshes the token if needed, so users
-// don't get randomly logged out mid-session. This is boilerplate
-// you basically always want with Supabase + Next.js App Router.
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({ request: { headers: request.headers } });
 
@@ -26,7 +22,24 @@ export async function middleware(request: NextRequest) {
     }
   );
 
-  await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const { pathname } = request.nextUrl;
+
+  // Protected routes — redirect to login if not authenticated
+  const protectedPaths = ["/dashboard", "/teams", "/profile"];
+  const isProtected = protectedPaths.some((p) => pathname.startsWith(p));
+
+  if (isProtected && !user) {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
+
+  // If already authenticated and on login page, redirect to dashboard
+  if (pathname === "/" && user) {
+    return NextResponse.redirect(new URL("/dashboard", request.url));
+  }
 
   return response;
 }
@@ -36,3 +49,4 @@ export const config = {
     "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 };
+

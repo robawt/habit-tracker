@@ -48,34 +48,65 @@ export default function NewHabitPage({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-3 mt-10">
-      <h1 className="text-xl font-bold">New habit</h1>
-      <input
-        required
-        maxLength={100}
-        placeholder="e.g. Ship a PR"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        className="w-full border rounded-lg px-4 py-2"
-      />
-      <div>
-        <label className="text-sm text-slate-600">Base points per check-in</label>
-        <input
-          type="number"
-          min={1}
-          value={points}
-          onChange={(e) => setPoints(Number(e.target.value))}
-          className="w-full border rounded-lg px-4 py-2"
-        />
-      </div>
-      <button
-        type="submit"
-        disabled={submitting}
-        className="bg-slate-900 text-white rounded-lg px-4 py-2 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
-      >
-        {submitting ? "Creating..." : "Create habit"}
-      </button>
-      {error && <p className="text-red-600 text-sm">{error}</p>}
-    </form>
+    <div className="max-w-lg mx-auto">
+      <form onSubmit={handleSubmit} className="card p-6 space-y-4">
+        <div className="flex items-center gap-3 mb-2">
+          <div className="w-10 h-10 bg-old-yellow-400 text-old-navy flex items-center justify-center text-lg font-bold border-2 border-old-navy shadow-box-sm">
+            +
+          </div>
+          <div>
+            <h1 className="text-xl font-bold text-old-navy">New habit</h1>
+            <p className="text-sm text-gray-500">
+              Define a new habit for your team to track
+            </p>
+          </div>
+        </div>
+
+        <div>
+          <label className="label" htmlFor="title">Habit title</label>
+          <input
+            id="title"
+            required
+            maxLength={100}
+            placeholder="e.g. Ship a PR"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className="input-field"
+          />
+        </div>
+
+        <div>
+          <label className="label" htmlFor="points">Base points per check-in</label>
+          <input
+            id="points"
+            type="number"
+            min={1}
+            max={100}
+            value={points}
+            onChange={(e) => setPoints(Number(e.target.value))}
+            className="input-field"
+          />
+          <p className="text-xs text-gray-400 mt-1">
+            Higher points = more motivation. Streaks multiply this over time.
+          </p>
+        </div>
+
+        <div className="flex gap-3 pt-2">
+          <button
+            type="submit"
+            disabled={submitting}
+            className="btn-primary"
+          >
+            {submitting ? "Creating..." : "Create habit"}
+          </button>
+        </div>
+
+        {error && (
+          <div className="bg-red-100 border-2 border-red-800 text-red-800 text-sm p-3 shadow-box-sm">
+            {error}
+          </div>
+        )}
+      </form>
+    </div>
   );
 }

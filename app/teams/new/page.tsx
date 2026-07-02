@@ -41,13 +41,22 @@ export default function NewTeamPage() {
       .select()
       .single();
 
-    setCreating(false);
-    if (teamErr || !team) return setError(teamErr?.message ?? "Failed to create team.");
+    // Keep button disabled through BOTH inserts to prevent double-submit
+    if (teamErr || !team) {
+      setCreating(false);
+      return setError(teamErr?.message ?? "Failed to create team.");
+    }
 
-    await supabase
+    const { error: memberErr } = await supabase
       .from("team_members")
       .insert({ team_id: team.id, user_id: user.id, role: "owner" });
 
+    if (memberErr) {
+      setCreating(false);
+      return setError(memberErr.message);
+    }
+
+    setCreating(false);
     router.push(`/teams/${team.id}`);
   }
 
@@ -68,10 +77,13 @@ export default function NewTeamPage() {
       return;
     }
 
+    // Normalize to lowercase — invite codes are generated as lowercase hex
+    const normalizedCode = trimmed.toLowerCase();
+
     const { data: team, error: findErr } = await supabase
       .from("teams")
       .select("id")
-      .eq("invite_code", trimmed)
+      .eq("invite_code", normalizedCode)
       .single();
 
     if (findErr || !team) {
@@ -90,45 +102,90 @@ export default function NewTeamPage() {
   }
 
   return (
-    <div className="space-y-10 mt-10">
-      <form onSubmit={createTeam} className="space-y-3">
-        <h2 className="font-semibold text-lg">Create a new team</h2>
-        <input
-          required
-          maxLength={50}
-          placeholder="Team name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="w-full border rounded-lg px-4 py-2"
-        />
-        <button
-          type="submit"
-          disabled={creating}
-          className="bg-slate-900 text-white rounded-lg px-4 py-2 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {creating ? "Creating..." : "Create team"}
-        </button>
-      </form>
+    <div className="max-w-lg mx-auto space-y-8">
+      {/* Create Team */}
+      <div className="card p-6">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-10 h-10 bg-old-yellow-400 text-old-navy flex items-center justify-center text-lg font-bold border-2 border-old-navy shadow-box-sm">
+            +
+          </div>
+          <div>
+            <h2 className="font-bold text-lg text-old-navy">
+              Create a new team
+            </h2>
+            <p className="text-sm text-gray-500">
+              Start a fresh team for you and your friends
+            </p>
+          </div>
+        </div>
+        <form onSubmit={createTeam} className="space-y-3">
+          <input
+            required
+            maxLength={50}
+            placeholder="Team name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="input-field"
+          />
+          <button
+            type="submit"
+            disabled={creating}
+            className="btn-primary w-full"
+          >
+            {creating ? "Creating..." : "Create team"}
+          </button>
+        </form>
+      </div>
 
-      <form onSubmit={joinTeam} className="space-y-3">
-        <h2 className="font-semibold text-lg">Join an existing team</h2>
-        <input
-          required
-          placeholder="Invite code"
-          value={joinCode}
-          onChange={(e) => setJoinCode(e.target.value)}
-          className="w-full border rounded-lg px-4 py-2"
-        />
-        <button
-          type="submit"
-          disabled={joining}
-          className="bg-slate-700 text-white rounded-lg px-4 py-2 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {joining ? "Joining..." : "Join team"}
-        </button>
-      </form>
+      <div className="relative">
+        <div className="absolute inset-0 flex items-center">
+          <div className="w-full border-t-2 border-old-navy" />
+        </div>
+        <div className="relative flex justify-center">
+          <span className="bg-old-yellow-50 px-3 text-sm font-bold text-old-navy">
+            OR
+          </span>
+        </div>
+      </div>
 
-      {error && <p className="text-red-600 text-sm">{error}</p>}
+      {/* Join Team */}
+      <div className="card p-6">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-10 h-10 bg-old-blue-500 text-old-yellow-400 flex items-center justify-center text-lg font-bold border-2 border-old-navy shadow-box-sm">
+            &amp;
+          </div>
+          <div>
+            <h2 className="font-bold text-lg text-old-navy">
+              Join an existing team
+            </h2>
+            <p className="text-sm text-gray-500">
+              Enter an invite code from a teammate
+            </p>
+          </div>
+        </div>
+        <form onSubmit={joinTeam} className="space-y-3">
+          <input
+            required
+            placeholder="Invite code"
+            value={joinCode}
+            onChange={(e) => setJoinCode(e.target.value)}
+            className="input-field font-mono tracking-widest"
+          />
+          <button
+            type="submit"
+            disabled={joining}
+            className="btn-primary w-full"
+          >
+            {joining ? "Joining..." : "Join team"}
+          </button>
+        </form>
+      </div>
+
+      {error && (
+        <div className="bg-red-100 border-2 border-red-800 text-red-800 text-sm p-3 shadow-box-sm">
+          {error}
+        </div>
+      )}
     </div>
   );
 }

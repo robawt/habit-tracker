@@ -1,4 +1,5 @@
 import "./globals.css";
+import Navbar from "@/components/Navbar";
 
 export const metadata = {
   title: "Habit Tracker",
@@ -12,8 +13,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
-        <main className="max-w-3xl mx-auto p-6">{children}</main>
+      <body className="min-h-screen bg-old-yellow-50">
+        <Navbar />
+        <main className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
+          {children}
+        </main>
       </body>
     </html>
   );

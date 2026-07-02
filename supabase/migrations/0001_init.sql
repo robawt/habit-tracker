@@ -196,6 +196,12 @@ begin
     insert into user_badges (user_id, habit_id, badge_id)
     select new.user_id, new.habit_id, id from badges where code = 'streak_100'
     on conflict do nothing;
+  elsif v_streak = 1 and get_longest_streak(new.user_id, new.habit_id) >= 3 then
+    -- "Comeback Kid" — awarded when the user starts a new streak after
+    -- having previously built a streak of at least 3 days.
+    insert into user_badges (user_id, habit_id, badge_id)
+    select new.user_id, new.habit_id, id from badges where code = 'comeback'
+    on conflict do nothing;
   end if;
 
   return new;
@@ -212,7 +218,7 @@ for each row execute function handle_checkin_badges();
 -- it re-runs live every time you select from it. That's exactly
 -- what we want for a leaderboard: always current, no syncing.
 -- ============================================================
-create or replace view team_leaderboard as
+create or replace view team_leaderboard with (security_invoker = true) as
 select
   h.team_id,
   c.user_id,

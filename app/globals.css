@@ -2,6 +2,52 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  @apply bg-slate-50 text-slate-900;
+@layer base {
+  body {
+    @apply bg-old-yellow-50 text-gray-900;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-white border-2 border-old-navy shadow-box;
+  }
+
+  .btn-primary {
+    @apply bg-old-blue-500 text-old-yellow-400 border-2 border-old-navy px-4 py-2 font-bold text-sm
+           hover:bg-old-blue-600 active:bg-old-blue-700
+           disabled:opacity-50 disabled:cursor-not-allowed
+           shadow-box-sm;
+  }
+
+  .btn-secondary {
+    @apply bg-white text-old-navy border-2 border-old-navy px-4 py-2 font-bold text-sm
+           hover:bg-old-yellow-100 active:bg-old-yellow-200
+           disabled:opacity-50 disabled:cursor-not-allowed
+           shadow-box-sm;
+  }
+
+  .btn-success {
+    @apply bg-green-800 text-white border-2 border-old-navy px-4 py-2 font-bold text-sm
+           hover:bg-green-900 active:bg-green-950
+           disabled:opacity-50 disabled:cursor-not-allowed
+           shadow-box-sm;
+  }
+
+  .btn-ghost {
+    @apply text-old-navy hover:text-old-blue-700 hover:bg-old-yellow-100 px-3 py-1.5 text-sm
+           hover:shadow-box-sm active:shadow-none;
+  }
+
+  .input-field {
+    @apply w-full border-2 border-old-navy px-4 py-2.5 text-sm bg-white
+           placeholder:text-gray-400
+           focus:outline-none focus:border-old-blue-500 focus:shadow-box-sm
+           shadow-inner;
+  }
+
+  .label {
+    @apply block text-sm font-bold text-old-navy mb-1;
+  }
 }
