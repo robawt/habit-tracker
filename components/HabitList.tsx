@@ -11,6 +11,17 @@ type Habit = {
   checkedInToday: boolean;
 };
 
+const CELEBRATIONS = [
+  "Nice streak!",
+  "Streak +1!",
+  "Day {n}!",
+  "On fire!",
+  "Keep it going!",
+  "You checked in!",
+  "Solid!",
+  "Another one!",
+];
+
 export default function HabitList({
   userId,
   initialHabits,
@@ -20,13 +31,16 @@ export default function HabitList({
 }) {
   const [habits, setHabits] = useState(initialHabits);
   const [error, setError] = useState<string | null>(null);
+  const [celebration, setCelebration] = useState<{ habitId: string; message: string } | null>(null);
   const errorTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const celebrationTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const supabase = createClient();
 
-  // Cleanup timeout on unmount
+  // Cleanup timeouts on unmount
   useEffect(() => {
     return () => {
       if (errorTimerRef.current) clearTimeout(errorTimerRef.current);
+      if (celebrationTimerRef.current) clearTimeout(celebrationTimerRef.current);
     };
   }, []);
 
@@ -58,72 +72,89 @@ export default function HabitList({
         )
       );
       setError(error.message);
-      // Clear error after 5 seconds
       errorTimerRef.current = setTimeout(() => setError(null), 5000);
+    } else {
+      // Show celebration message
+      const newStreak = habit.currentStreak + 1;
+      const randomMsg = CELEBRATIONS[Math.floor(Math.random() * CELEBRATIONS.length)]
+        .replace("{n}", String(newStreak));
+      setCelebration({ habitId: habit.id, message: randomMsg });
+      celebrationTimerRef.current = setTimeout(() => setCelebration(null), 2500);
     }
   }
 
   if (!habits.length) {
     return (
-      <div className="card p-8 text-center">
-        <div className="w-14 h-14 bg-old-blue-500 text-old-yellow-400 text-xl font-bold flex items-center justify-center mx-auto mb-3 border-2 border-old-navy shadow-box-sm">
-          ~
+      <div className="text-center py-6">
+        <div className="w-10 h-10 bg-xp-silver border border-black shadow-xp-sunken flex items-center justify-center mx-auto mb-2">
+          <span className="font-bold text-xp-blue-500">~</span>
         </div>
-        <p className="text-gray-600 mb-4">
-          No habits yet -- add one to start tracking.
+        <p className="text-sm text-gray-600">
+          No habits yet — add one to start tracking.
         </p>
       </div>
     );
   }
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-2">
       {error && (
-        <div className="bg-red-100 border-2 border-red-800 text-red-800 text-sm p-3 shadow-box-sm">
-          Failed to check in: {error}
+        <div className="msg-xp-error">
+          Couldn't check in: {error}
         </div>
       )}
       {habits.map((h) => (
-        <div
-          key={h.id}
-          className={`card p-5 flex items-center justify-between ${
-            h.checkedInToday ? "bg-green-100" : ""
-          }`}
-        >
-          <div className="flex items-center gap-3">
-            <div
-              className={`w-10 h-10 flex items-center justify-center text-lg font-bold border-2 border-old-navy shadow-box-sm ${
-                h.checkedInToday
-                  ? "bg-green-800 text-white"
-                  : "bg-old-blue-500 text-old-yellow-400"
-              }`}
-            >
-              {h.checkedInToday ? "OK" : "!?"}
+        <div key={h.id}>
+          {/* Celebration toast */}
+          {celebration?.habitId === h.id && (
+            <div className="msg-xp-success mb-2 text-center text-[11px] font-bold animate-pulse">
+              {celebration.message}
             </div>
-            <div>
-              <p className="font-bold text-old-navy">{h.title}</p>
-              <div className="flex items-center gap-2 mt-0.5">
-                <span className="text-sm font-bold text-old-navy bg-old-yellow-200 px-1.5 border border-old-navy shadow-box-sm">
-                  {h.currentStreak}
-                </span>
-                <span className="text-xs text-gray-400">|</span>
-                <span className="text-sm font-bold text-old-navy">
-                  {h.points_per_checkin} pts
-                </span>
-              </div>
-            </div>
-          </div>
-          <button
-            disabled={h.checkedInToday}
-            onClick={() => checkIn(h)}
-            className={`px-5 py-2.5 text-sm font-bold border-2 border-old-navy ${
+          )}
+          <div
+            className={`flex items-center justify-between px-3 py-2.5 border border-black ${
               h.checkedInToday
-                ? "bg-green-800 text-white shadow-box-sm cursor-default"
-                : "btn-primary"
+                ? "bg-xp-green-100 shadow-xp-sunken"
+                : "bg-xp-silver-100 shadow-xp-raised-sm"
             }`}
           >
-            {h.checkedInToday ? "✓ Checked in" : "Check in"}
-          </button>
+            <div className="flex items-center gap-3">
+              {/* Status indicator */}
+              <div
+                className={`w-9 h-9 flex items-center justify-center text-sm font-bold border border-black shadow-xp-sunken ${
+                  h.checkedInToday
+                    ? "bg-xp-green-500 text-white"
+                    : "bg-xp-blue-500 text-white"
+                }`}
+              >
+                {h.checkedInToday ? "OK" : "?"}
+              </div>
+              <div>
+                <p className="text-sm font-bold text-black">{h.title}</p>
+                <div className="flex items-center gap-2 mt-0.5">
+                  {/* Streak badge */}
+                  <span className="inline-flex items-center gap-0.5 text-[11px] font-bold text-black bg-xp-gold px-1.5 border border-black shadow-xp-raised-sm">
+                    STREAK {h.currentStreak}
+                  </span>
+                  <span className="text-[10px] text-gray-400">|</span>
+                  <span className="text-xs font-bold text-gray-700">
+                    {h.points_per_checkin} pts
+                  </span>
+                </div>
+              </div>
+            </div>
+            <button
+              disabled={h.checkedInToday}
+              onClick={() => checkIn(h)}
+              className={`px-4 py-1.5 text-xs font-bold border border-black ${
+                h.checkedInToday
+                  ? "bg-xp-green-500 text-white shadow-xp-sunken cursor-default"
+                  : "btn-xp-green text-xs"
+              }`}
+            >
+              {h.checkedInToday ? "[X] Checked in" : "Check in"}
+            </button>
+          </div>
         </div>
       ))}
     </div>

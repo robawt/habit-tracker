@@ -4,6 +4,11 @@ import Navbar from "@/components/Navbar";
 export const metadata = {
   title: "Habit Tracker",
   description: "Team habit tracking with streaks and rewards",
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/favicon.png",
+  },
 };
 
 export default function RootLayout({
@@ -13,9 +18,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="min-h-screen bg-old-yellow-50">
+      <body className="min-h-screen">
         <Navbar />
-        <main className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
+        <main className="max-w-5xl mx-auto px-4 sm:px-6 py-6">
           {children}
         </main>
       </body>

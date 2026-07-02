@@ -4,50 +4,210 @@
 
 @layer base {
   body {
-    @apply bg-old-yellow-50 text-gray-900;
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    @apply text-black;
+    font-family: Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 13px;
+    background-color: #C0C0C0;
+    background-image: url('/background.jpeg');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: fixed;
+    background-size: cover;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: "Trebuchet MS", "Lucida Sans Unicode", sans-serif;
   }
 }
 
 @layer components {
-  .card {
-    @apply bg-white border-2 border-old-navy shadow-box;
+  /* ── XP Window Frame ── */
+  .xp-window {
+    @apply bg-xp-silver border border-black shadow-xp-window;
   }
 
-  .btn-primary {
-    @apply bg-old-blue-500 text-old-yellow-400 border-2 border-old-navy px-4 py-2 font-bold text-sm
-           hover:bg-old-blue-600 active:bg-old-blue-700
-           disabled:opacity-50 disabled:cursor-not-allowed
-           shadow-box-sm;
+  .xp-window-title {
+    @apply bg-gradient-to-r from-xp-blue-500 to-xp-blue-700 text-white text-sm font-bold 
+           px-2 py-1 flex items-center justify-between select-none;
+    font-family: Tahoma, Geneva, Verdana, sans-serif;
   }
 
-  .btn-secondary {
-    @apply bg-white text-old-navy border-2 border-old-navy px-4 py-2 font-bold text-sm
-           hover:bg-old-yellow-100 active:bg-old-yellow-200
-           disabled:opacity-50 disabled:cursor-not-allowed
-           shadow-box-sm;
+  .xp-window-body {
+    @apply p-4 sm:p-5;
   }
 
-  .btn-success {
-    @apply bg-green-800 text-white border-2 border-old-navy px-4 py-2 font-bold text-sm
-           hover:bg-green-900 active:bg-green-950
-           disabled:opacity-50 disabled:cursor-not-allowed
-           shadow-box-sm;
+  .xp-window-close {
+    @apply w-4 h-4 bg-xp-silver border border-black text-black text-[10px] font-bold 
+           flex items-center justify-center shadow-xp-raised-sm cursor-pointer
+           hover:bg-red-500 hover:text-white active:shadow-xp-sunken;
+    font-family: Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1;
   }
 
-  .btn-ghost {
-    @apply text-old-navy hover:text-old-blue-700 hover:bg-old-yellow-100 px-3 py-1.5 text-sm
-           hover:shadow-box-sm active:shadow-none;
+  .xp-window-close:active {
+    @apply translate-x-px translate-y-px;
   }
 
-  .input-field {
-    @apply w-full border-2 border-old-navy px-4 py-2.5 text-sm bg-white
-           placeholder:text-gray-400
-           focus:outline-none focus:border-old-blue-500 focus:shadow-box-sm
-           shadow-inner;
+  .xp-window-controls {
+    @apply flex items-center gap-0.5;
   }
 
-  .label {
-    @apply block text-sm font-bold text-old-navy mb-1;
+  .xp-window-minimize {
+    @apply w-4 h-4 bg-xp-silver border border-black text-black text-[8px] font-bold 
+           flex items-center justify-center shadow-xp-raised-sm cursor-pointer
+           hover:bg-xp-silver-100 active:shadow-xp-sunken;
+    font-family: Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1;
+  }
+
+  .xp-window-minimize:active {
+    @apply translate-x-px translate-y-px;
+  }
+
+  .xp-window-maximize {
+    @apply w-4 h-4 bg-xp-silver border border-black text-black text-[8px] font-bold 
+           flex items-center justify-center shadow-xp-raised-sm cursor-pointer
+           hover:bg-xp-silver-100 active:shadow-xp-sunken;
+    font-family: Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1;
+  }
+
+  .xp-window-maximize:active {
+    @apply translate-x-px translate-y-px;
+  }
+
+  /* ── XP Raised Button ── */
+  .btn-xp {
+    @apply px-4 py-1.5 text-sm font-bold border border-black 
+           shadow-xp-raised bg-xp-silver 
+           active:shadow-xp-sunken active:translate-x-px active:translate-y-px
+           disabled:opacity-60 disabled:cursor-not-allowed 
+           disabled:active:translate-x-0 disabled:active:translate-y-0 
+           disabled:active:shadow-xp-raised;
+    font-family: Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  .btn-xp:hover:not(:disabled) {
+    @apply bg-xp-silver-100;
+  }
+
+  .btn-xp-primary {
+    @apply btn-xp bg-gradient-to-b from-xp-blue-400 to-xp-blue-600 
+           text-white border-xp-blue-800;
+  }
+
+  .btn-xp-primary:hover:not(:disabled) {
+    @apply from-xp-blue-500 to-xp-blue-700;
+  }
+
+  .btn-xp-green {
+    @apply btn-xp bg-gradient-to-b from-xp-green-400 to-xp-green-600 
+           text-white border-green-900;
+  }
+
+  .btn-xp-green:hover:not(:disabled) {
+    @apply from-xp-green-500 to-xp-green-700;
+  }
+
+  .btn-xp-gold {
+    @apply btn-xp bg-gradient-to-b from-yellow-300 to-yellow-500 
+           text-black border-yellow-700;
+  }
+
+  .btn-xp-gold:hover:not(:disabled) {
+    @apply from-yellow-200 to-yellow-400;
+  }
+
+  /* ── XP Sunken Input ── */
+  .input-xp {
+    @apply w-full px-2 py-1.5 text-sm bg-white border border-black
+           shadow-xp-sunken
+           focus:outline-none focus:border-xp-blue-500 focus:ring-1 focus:ring-xp-blue-500
+           placeholder:text-gray-400;
+    font-family: Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  .input-xp:disabled {
+    @apply bg-xp-silver-100 text-gray-500 cursor-not-allowed;
+  }
+
+  .input-xp-error {
+    @apply input-xp border-red-600 focus:border-red-600 focus:ring-red-400;
+  }
+
+  /* ── XP Label ── */
+  .label-xp {
+    @apply block text-xs font-bold text-gray-700 mb-0.5;
+    font-family: Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  /* ── XP Select/Dropdown ── */
+  .select-xp {
+    @apply input-xp appearance-none cursor-pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10'%3E%3Cpath d='M2 3h6l-3 4z' fill='%23000'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 4px center;
+    padding-right: 20px;
+  }
+
+  /* ── XP Status Messages ── */
+  .msg-xp {
+    @apply text-sm p-2 border border-black;
+  }
+
+  .msg-xp-info {
+    @apply msg-xp bg-xp-silver-100 shadow-xp-sunken;
+  }
+
+  .msg-xp-error {
+    @apply msg-xp bg-red-100 text-red-800 shadow-xp-sunken;
+  }
+
+  .msg-xp-success {
+    @apply msg-xp bg-green-100 text-green-800 shadow-xp-sunken;
+  }
+
+  /* ── 88×31 Badge ── */
+  .badge-88x31 {
+    @apply inline-flex items-center justify-center text-[9px] font-bold leading-none
+           px-1.5 border border-black shadow-xp-raised-sm uppercase;
+    font-family: Tahoma, Geneva, Verdana, sans-serif;
+    width: 88px;
+    height: 31px;
+    white-space: nowrap;
+  }
+
+  /* ── XP Tab Style (for toggle groups) ── */
+  .tab-xp {
+    @apply px-3 py-1 text-xs font-bold border border-black bg-xp-silver 
+           shadow-xp-raised-sm cursor-pointer;
+    font-family: Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  .tab-xp:hover {
+    @apply bg-xp-silver-100;
+  }
+
+  .tab-xp-active {
+    @apply tab-xp bg-xp-blue-500 text-white shadow-xp-sunken border-xp-blue-800;
+  }
+
+  .tab-xp-active:hover {
+    @apply bg-xp-blue-600;
+  }
+
+  /* ── XP Taskbar Tool Button ── */
+  .toolbar-btn {
+    @apply px-2 py-0.5 text-[11px] border border-black shadow-xp-raised-sm 
+           bg-xp-silver cursor-pointer;
+    font-family: Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  .toolbar-btn:hover {
+    @apply bg-xp-silver-100;
+  }
+
+  .toolbar-btn:active, .toolbar-btn-active {
+    @apply shadow-xp-sunken bg-xp-silver-200;
   }
 }

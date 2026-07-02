@@ -27,7 +27,6 @@ export default function Leaderboard({
     setRows(leaderboardRows);
 
     // Fetch display names for all users in the leaderboard
-    // Fetch fresh each time so profile changes are reflected immediately
     const userIds = leaderboardRows.map((r) => r.user_id);
 
     const nameMap: Record<string, string> = {};
@@ -69,61 +68,85 @@ export default function Leaderboard({
   }
 
   function getMedal(i: number): string {
-    if (i === 0) return "#1";
-    if (i === 1) return "#2";
-    if (i === 2) return "#3";
-    return `#${i + 1}`;
+    if (i === 0) return "1st";
+    if (i === 1) return "2nd";
+    if (i === 2) return "3rd";
+    return `${i + 1}th`;
   }
 
   return (
-    <div>
-      <h2 className="text-lg font-bold text-old-navy mb-3">[ Leaderboard ]</h2>
-      <div className="card divide-y-2 divide-old-navy overflow-hidden">
-        {rows.map((r, i) => (
-          <div
-            key={r.user_id}
-            className={`flex items-center gap-3 px-4 py-3.5 ${
-              r.user_id === currentUserId
-                ? "bg-old-blue-500 text-white"
-                : i % 2 === 0
-                ? "bg-white"
-                : "bg-old-yellow-100"
-            }`}
-          >
-            <span className="w-8 text-center text-sm font-bold text-inherit">
-              {getMedal(i)}
-            </span>
-            <div className="flex-1 min-w-0">
-              <span
-                className={`font-bold text-sm truncate ${
-                  r.user_id === currentUserId
-                    ? "text-old-yellow-400"
-                    : "text-old-navy"
+    <div className="xp-window">
+      <div className="xp-window-title">
+        <div className="flex items-center gap-1.5">
+          <img src="/icons/icon-trophy.png" alt="" className="w-4 h-4" />
+          <span>Team Leaderboard</span>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <span className="text-[10px] opacity-80">rankings</span>
+          <div className="xp-window-controls">
+            <span className="xp-window-minimize">_</span>
+            <span className="xp-window-maximize">&#9633;</span>
+            <span className="xp-window-close">X</span>
+          </div>
+        </div>
+      </div>
+      <div>
+        {/* Column headers */}
+        <div className="flex items-center gap-0 px-2 py-1 text-[10px] font-bold text-gray-700 bg-gradient-to-b from-xp-silver-100 to-xp-silver-300 border-b border-black shadow-xp-sunken">
+          <span className="w-8 text-center">Rank</span>
+          <span className="flex-1">Member</span>
+          <span className="w-16 text-right">Points</span>
+          <span className="w-20 text-right hidden sm:block">Check-ins</span>
+        </div>
+
+        {/* Rows */}
+        <div className="divide-y divide-gray-400">
+          {rows.map((r, i) => {
+            const isCurrentUser = r.user_id === currentUserId;
+            return (
+              <div
+                key={r.user_id}
+                className={`flex items-center gap-0 px-2 py-2 text-xs ${
+                  isCurrentUser
+                    ? "bg-xp-blue-500 text-white"
+                    : i % 2 === 0
+                    ? "bg-white"
+                    : "bg-xp-silver-50"
                 }`}
               >
-                {r.user_id === currentUserId
-                  ? `${getDisplayName(r.user_id)} (You)`
-                  : getDisplayName(r.user_id)}
-              </span>
+                <span className="w-8 text-center font-bold text-inherit">
+                  {getMedal(i)}
+                </span>
+                <span className="flex-1 truncate text-inherit">
+                  <span className={isCurrentUser ? "text-xp-gold font-bold" : "font-bold text-black"}>
+                    {isCurrentUser
+                      ? `${getDisplayName(r.user_id)} (You)`
+                      : getDisplayName(r.user_id)}
+                  </span>
+                </span>
+                <span className="w-16 text-right font-bold text-inherit">
+                  {r.total_points} pts
+                </span>
+                <span className="w-20 text-right text-inherit hidden sm:block">
+                  {r.total_checkins} check-in{r.total_checkins !== 1 ? "s" : ""}
+                </span>
+              </div>
+            );
+          })}
+          {!rows.length && (
+            <div className="p-6 text-center text-sm text-gray-500">
+              <p>No check-ins yet.</p>
+              <p className="text-xs text-gray-400 mt-1">
+                Be the first to check in to a habit!
+              </p>
             </div>
-            <div className="text-right flex-shrink-0">
-              <span className="font-bold text-sm text-inherit">
-                {r.total_points} pts
-              </span>
-              <span className="text-xs opacity-75 ml-2">
-                {r.total_checkins} check-in{r.total_checkins !== 1 ? "s" : ""}
-              </span>
-            </div>
-          </div>
-        ))}
-        {!rows.length && (
-          <div className="p-6 text-center">
-            <p className="text-gray-500 text-sm">No check-ins yet.</p>
-            <p className="text-xs text-gray-400 mt-1">
-              Be the first to check in to a habit!
-            </p>
-          </div>
-        )}
+          )}
+        </div>
+      </div>
+      {/* Status bar */}
+      <div className="border-t border-black bg-xp-silver-300 px-2 py-0.5 text-[10px] text-gray-600 flex items-center justify-between shadow-xp-sunken">
+        <span>{rows.length} member{rows.length !== 1 ? "s" : ""}</span>
+        <span>Leaderboard</span>
       </div>
     </div>
   );

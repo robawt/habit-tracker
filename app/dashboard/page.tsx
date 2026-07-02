@@ -33,125 +33,159 @@ export default async function Dashboard() {
   }
 
   return (
-    <div className="space-y-8">
-      {/* Welcome Header */}
-      <div className="card p-6">
-        <div className="flex items-center gap-4">
-          <div className="w-14 h-14 bg-old-blue-500 text-old-yellow-400 flex items-center justify-center text-xl font-bold border-2 border-old-navy shadow-box-sm">
-            {getInitial(displayName)}
+    <div className="space-y-6">
+      {/* Welcome Window */}
+      <div className="xp-window">
+        <div className="xp-window-title">
+          <span>Welcome</span>
+          <div className="flex items-center gap-1.5">
+            <span className="text-[10px] opacity-80">{user.email}</span>
+            <div className="xp-window-controls">
+              <span className="xp-window-minimize">_</span>
+              <span className="xp-window-maximize">&#9633;</span>
+              <span className="xp-window-close">X</span>
+            </div>
           </div>
-          <div>
-            <h1 className="text-2xl font-bold text-old-navy">
-              Welcome, {displayName}!
-            </h1>
-            <p className="text-gray-500 text-sm mt-0.5">
-              {teams?.length || 0} team{teams?.length !== 1 ? "s" : ""} |{" "}
-              {user.email}
-            </p>
+        </div>
+        <div className="xp-window-body">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 bg-xp-silver border border-black shadow-xp-sunken flex items-center justify-center shrink-0">
+              <span className="text-lg font-bold text-xp-blue-500">
+                {getInitial(displayName)}
+              </span>
+            </div>
+            <div>
+              <h1 className="text-base font-bold text-black font-heading">
+                Welcome, {displayName}!
+              </h1>
+              <p className="text-xs text-gray-600 mt-0.5">
+                {teams?.length || 0} team{teams?.length !== 1 ? "s" : ""}
+              </p>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Teams Section */}
-      <div>
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-bold text-old-navy">Your Teams</h2>
-          <Link href="/teams/new" className="btn-primary">
-            + New team
-          </Link>
-        </div>
-
-        {!teams?.length ? (
-          <div className="card p-8 text-center">
-            <div className="w-14 h-14 bg-old-blue-500 text-old-yellow-400 text-xl font-bold flex items-center justify-center mx-auto mb-3 border-2 border-old-navy shadow-box-sm">
-              !
-            </div>
-            <p className="text-gray-600 mb-4">
-              You&apos;re not on any teams yet. Create one or join with an
-              invite code to get started!
-            </p>
-            <Link href="/teams/new" className="btn-primary">
-              Get started
+      {/* Teams Window */}
+      <div className="xp-window">
+        <div className="xp-window-title">
+          <span>Your Teams</span>
+          <div className="flex items-center gap-1.5">
+            <Link href="/teams/new" className="btn-xp-green text-[10px] px-2 py-0.5">
+              + New
             </Link>
+            <div className="xp-window-controls">
+              <span className="xp-window-minimize">_</span>
+              <span className="xp-window-maximize">&#9633;</span>
+              <span className="xp-window-close">X</span>
+            </div>
           </div>
-        ) : (
-          <div className="grid gap-3 sm:grid-cols-2">
-            {teams?.map((row: any) => (
-              <Link
-                key={row.teams.id}
-                href={`/teams/${row.teams.id}`}
-                className="card p-5 hover:shadow-box-lg transition-none group"
-              >
-                <div className="flex items-center justify-between">
+        </div>
+        <div className="xp-window-body">
+          {!teams?.length ? (
+            <div className="text-center py-6">
+              <div className="w-10 h-10 bg-xp-silver border border-black shadow-xp-sunken flex items-center justify-center mx-auto mb-2">
+                <span className="font-bold text-xp-blue-500">!</span>
+              </div>
+              <p className="text-sm text-gray-600 mb-3">
+                You&apos;re not on any teams yet. Create one or join with an invite code!
+              </p>
+              <Link href="/teams/new" className="btn-xp-primary">
+                Get started
+              </Link>
+            </div>
+          ) : (
+            <div className="space-y-2">
+              {teams?.map((row: any) => (
+                <Link
+                  key={row.teams.id}
+                  href={`/teams/${row.teams.id}`}
+                  className="flex items-center justify-between px-3 py-2 border border-black bg-xp-silver-100 hover:bg-xp-silver-200 shadow-xp-raised-sm active:shadow-xp-sunken active:translate-x-px active:translate-y-px"
+                >
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-old-blue-500 text-old-yellow-400 flex items-center justify-center text-sm font-bold border-2 border-old-navy shadow-box-sm">
-                      {getInitial(row.teams.name)}
+                    <div className="w-8 h-8 bg-xp-silver border border-black shadow-xp-sunken flex items-center justify-center shrink-0">
+                      <span className="text-xs font-bold text-xp-blue-500">
+                        {getInitial(row.teams.name)}
+                      </span>
                     </div>
                     <div>
-                      <p className="font-bold text-old-navy">
+                      <p className="text-sm font-bold text-black">
                         {row.teams.name}
                       </p>
-                      <p className="text-xs text-gray-400 font-mono">
+                      <p className="text-[10px] text-gray-500 font-mono">
                         Code: {row.teams.invite_code}
                       </p>
                     </div>
                   </div>
-                  <span className="text-old-navy font-bold text-lg">&gt;</span>
-                </div>
-              </Link>
-            ))}
-          </div>
-        )}
+                  <span className="text-black font-bold text-sm">&gt;</span>
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
+        {/* Status bar */}
+        <div className="border-t border-black bg-xp-silver-300 px-2 py-0.5 text-[10px] text-gray-600 flex items-center justify-between shadow-xp-sunken">
+          <span>{teams?.length || 0} item(s)</span>
+          <span>My Computer</span>
+        </div>
       </div>
 
-      {/* Quick Actions */}
-      <div>
-        <h2 className="text-lg font-bold text-old-navy mb-4">
-          Quick Actions
-        </h2>
-        <div className="grid gap-3 sm:grid-cols-3">
-          <Link
-            href="/teams/new"
-            className="card p-5 text-center hover:shadow-box-lg"
-          >
-            <div className="w-12 h-12 bg-old-yellow-400 text-old-navy text-lg font-bold flex items-center justify-center mx-auto mb-2 border-2 border-old-navy shadow-box-sm">
-              +
-            </div>
-            <p className="font-bold text-old-navy">
-              Create Team
-            </p>
-            <p className="text-xs text-gray-500 mt-1">
-              Start a new team for your habits
-            </p>
-          </Link>
+      {/* Quick Actions Window */}
+      <div className="xp-window">
+        <div className="xp-window-title">
+          <span>Quick Actions</span>
+          <div className="xp-window-controls">
+            <span className="xp-window-minimize">_</span>
+            <span className="xp-window-maximize">&#9633;</span>
+            <span className="xp-window-close">X</span>
+          </div>
+        </div>
+        <div className="xp-window-body">
+          <div className="grid gap-3 sm:grid-cols-3">
+            <Link
+              href="/teams/new"
+              className="flex flex-col items-center gap-2 px-4 py-4 border border-black bg-xp-silver hover:bg-xp-silver-100 shadow-xp-raised-sm active:shadow-xp-sunken active:translate-x-px active:translate-y-px"
+            >
+              <div className="w-10 h-10 bg-xp-gold border border-black shadow-xp-sunken flex items-center justify-center">
+                <span className="text-base font-bold text-black">+</span>
+              </div>
+              <div className="text-center">
+                <p className="text-xs font-bold text-black">Create Team</p>
+                <p className="text-[10px] text-gray-600 mt-0.5">
+                  Start a new team
+                </p>
+              </div>
+            </Link>
 
-          <Link
-            href="/profile"
-            className="card p-5 text-center hover:shadow-box-lg"
-          >
-            <div className="w-12 h-12 bg-old-blue-500 text-old-yellow-400 text-lg font-bold flex items-center justify-center mx-auto mb-2 border-2 border-old-navy shadow-box-sm">
-              @
-            </div>
-            <p className="font-bold text-old-navy">
-              Your Profile
-            </p>
-            <p className="text-xs text-gray-500 mt-1">
-              Edit display name and settings
-            </p>
-          </Link>
+            <Link
+              href="/profile"
+              className="flex flex-col items-center gap-2 px-4 py-4 border border-black bg-xp-silver hover:bg-xp-silver-100 shadow-xp-raised-sm active:shadow-xp-sunken active:translate-x-px active:translate-y-px"
+            >
+              <div className="w-10 h-10 bg-xp-blue-500 border border-black shadow-xp-sunken flex items-center justify-center">
+                <span className="text-base font-bold text-white">@</span>
+              </div>
+              <div className="text-center">
+                <p className="text-xs font-bold text-black">Your Profile</p>
+                <p className="text-[10px] text-gray-600 mt-0.5">
+                  Edit settings
+                </p>
+              </div>
+            </Link>
 
-          <div className="card p-5 text-center bg-old-yellow-100">
-            <div className="w-12 h-12 bg-old-yellow-400 text-old-navy text-lg font-bold flex items-center justify-center mx-auto mb-2 border-2 border-old-navy shadow-box-sm">
-              &#9733;
+            <div className="flex flex-col items-center gap-2 px-4 py-4 border border-black bg-xp-green-100 shadow-xp-sunken">
+              <div className="w-10 h-10 bg-xp-green-500 border border-black shadow-xp-sunken flex items-center justify-center">
+                <img src="/icons/habit-streak.png" alt="streak" className="w-7 h-7" />
+              </div>
+              <div className="text-center">
+                <p className="text-xs font-bold text-black">Stay consistent</p>
+                <p className="text-[10px] text-gray-600 mt-0.5">
+                  Check in daily
+                </p>
+              </div>
             </div>
-            <p className="font-bold text-old-navy">Stay consistent</p>
-            <p className="text-xs text-gray-500 mt-1">
-              Check in daily to build streaks
-            </p>
           </div>
         </div>
       </div>
     </div>
   );
 }
-

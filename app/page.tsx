@@ -82,159 +82,203 @@ export default function LoginPage() {
 
   if (sent) {
     return (
-      <div className="min-h-[60vh] flex items-center justify-center">
-        <div className="card p-8 max-w-md w-full text-center">
-          <div className="w-14 h-14 bg-old-blue-500 text-old-yellow-400 text-2xl font-bold flex items-center justify-center mx-auto mb-4 border-2 border-old-navy shadow-box-sm">
-            @
+      <div className="min-h-[80vh] flex items-center justify-center">
+        <div className="xp-window max-w-md w-full">
+          <div className="xp-window-title">
+            <span>Habit Tracker</span>
+            <span className="text-[10px] opacity-80">— email sent</span>
           </div>
-          <h1 className="text-2xl font-bold text-old-navy mb-2">Check your email</h1>
-          {mode === "password" && isSignUp ? (
-            <p className="text-gray-600">
-              We sent a confirmation link to{" "}
-              <b className="text-old-navy">{email}</b>. Click it to activate
-              your account, then sign in.
-            </p>
-          ) : (
-            <p className="text-gray-600">
-              We sent a login link to{" "}
-              <b className="text-old-navy">{email}</b>.
-            </p>
-          )}
+          <div className="xp-window-body text-center space-y-3">
+            <div className="w-12 h-12 bg-xp-silver border border-black shadow-xp-sunken flex items-center justify-center mx-auto">
+              <img src="/icons/icon-mail.png" alt="mail" className="w-8 h-8" />
+            </div>
+            <h2 className="text-base font-bold text-black font-heading">Check your email</h2>
+            {mode === "password" && isSignUp ? (
+              <p className="text-sm text-gray-600">
+                We sent a confirmation link to{" "}
+                <b className="text-black">{email}</b>. Click it to activate
+                your account, then sign in.
+              </p>
+            ) : (
+              <p className="text-sm text-gray-600">
+                We sent a login link to{" "}
+                <b className="text-black">{email}</b>.
+              </p>
+            )}
+            <button onClick={() => setSent(false)} className="btn-xp mt-2">
+              OK
+            </button>
+          </div>
+          {/* 88x31 badge footer */}
+          <div className="flex justify-center gap-2 pb-3">
+            <span className="badge-88x31 bg-xp-green-500 text-white text-[8px]">HABITS</span>
+            <span className="badge-88x31 bg-retro-magenta text-white">STREAKS</span>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-[60vh] flex items-center justify-center">
-      <div className="card p-8 max-w-md w-full">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-old-blue-500 text-old-yellow-400 text-3xl font-bold flex items-center justify-center mx-auto mb-3 border-2 border-old-navy shadow-box">
-            HT
+    <div className="min-h-[80vh] flex items-center justify-center">
+      <div className="xp-window max-w-md w-full">
+        {/* Window Title Bar */}
+        <div className="xp-window-title">
+          <span>Habit Tracker</span>
+          <div className="flex items-center gap-1.5">
+            <span className="text-[10px] opacity-80">sign in</span>
+            <div className="xp-window-controls">
+              <span className="xp-window-minimize">_</span>
+              <span className="xp-window-maximize">&#9633;</span>
+              <span className="xp-window-close" onClick={() => {}}>X</span>
+            </div>
           </div>
-          <h1 className="text-3xl font-bold text-old-navy">Habit Tracker</h1>
-          <p className="text-gray-500 mt-1">
-            Build streaks with your team
-          </p>
         </div>
 
-        {/* Auth Mode Toggle */}
-        <div className="flex border-2 border-old-navy shadow-box-sm mb-6">
-          <button
-            onClick={() => { setMode("password"); setError(null); }}
-            className={`flex-1 py-2 text-sm font-bold ${
-              mode === "password"
-                ? "bg-old-blue-500 text-old-yellow-400"
-                : "bg-white text-old-navy hover:bg-old-yellow-100"
-            }`}
-          >
-            Email & Password
-          </button>
-          <button
-            onClick={() => { setMode("magic-link"); setError(null); }}
-            className={`flex-1 py-2 text-sm font-bold border-l-2 border-old-navy ${
-              mode === "magic-link"
-                ? "bg-old-blue-500 text-old-yellow-400"
-                : "bg-white text-old-navy hover:bg-old-yellow-100"
-            }`}
-          >
-            Magic Link
-          </button>
-        </div>
-        <form onSubmit={handleLogin} className="space-y-4">
-          {/* Email */}
-          <div>
-            <label className="label" htmlFor="email">
-              Email address
-            </label>
-            <input
-              id="email"
-              type="email"
-              required
-              placeholder="you@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="input-field"
+        <div className="xp-window-body">
+          {/* Logo / Header */}
+          <div className="text-center mb-5">
+            <img
+              src="/icons/habit-star.png"
+              alt="Habit Tracker"
+              className="w-16 h-16 border-2 border-black shadow-xp-sunken mx-auto mb-2"
             />
+            <h1 className="text-lg font-bold text-black font-heading">Habit Tracker</h1>
+            <p className="text-xs text-gray-600 mt-0.5">Build streaks with your team</p>
           </div>
 
-          {/* Display Name (only shown during sign up) */}
-          {mode === "password" && isSignUp && (
-            <div>
-              <label className="label" htmlFor="displayName">
-                Display name
-              </label>
-              <input
-                id="displayName"
-                type="text"
-                placeholder="Your name"
-                value={displayName}
-                onChange={(e) => setDisplayName(e.target.value)}
-                className="input-field"
-              />
-            </div>
-          )}
+          {/* Auth Mode Tabs */}
+          <div className="flex mb-4">
+            <button
+              onClick={() => { setMode("password"); setError(null); }}
+              className={`tab-xp rounded-r-none border-r-0 flex-1 text-center ${
+                mode === "password" ? "tab-xp-active" : ""
+              }`}
+            >
+              Password
+            </button>
+            <button
+              onClick={() => { setMode("magic-link"); setError(null); }}
+              className={`tab-xp rounded-l-none flex-1 text-center ${
+                mode === "magic-link" ? "tab-xp-active" : ""
+              }`}
+            >
+              Magic Link
+            </button>
+          </div>
 
-          {/* Password */}
-          {mode === "password" && (
+          <form onSubmit={handleLogin} className="space-y-3">
+            {/* Email */}
             <div>
-              <label className="label" htmlFor="password">
-                Password
+              <label className="label-xp" htmlFor="email">
+                Email address
               </label>
               <input
-                id="password"
-                type="password"
+                id="email"
+                type="email"
                 required
-                minLength={6}
-                placeholder="At least 6 characters"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="input-field"
+                placeholder="you@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="input-xp"
               />
             </div>
-          )}
 
-          {/* Submit */}
-          <button type="submit" disabled={submitting} className="btn-primary w-full">
-            {submitting
-              ? "Please wait..."
-              : mode === "magic-link"
-              ? "Send magic link"
-              : isSignUp
-              ? "Create account"
-              : "Sign in"}
-          </button>
+            {/* Display Name (only shown during sign up) */}
+            {mode === "password" && isSignUp && (
+              <div>
+                <label className="label-xp" htmlFor="displayName">
+                  Display name
+                </label>
+                <input
+                  id="displayName"
+                  type="text"
+                  placeholder="Your name"
+                  value={displayName}
+                  onChange={(e) => setDisplayName(e.target.value)}
+                  className="input-xp"
+                />
+              </div>
+            )}
 
-          {error && (
-            <div className="bg-red-100 border-2 border-red-800 text-red-800 text-sm p-3 shadow-box-sm">
-              {error}
+            {/* Password */}
+            {mode === "password" && (
+              <div>
+                <label className="label-xp" htmlFor="password">
+                  Password
+                </label>
+                <input
+                  id="password"
+                  type="password"
+                  required
+                  minLength={6}
+                  placeholder="At least 6 characters"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="input-xp"
+                />
+              </div>
+            )}
+
+            {/* Submit */}
+            <button type="submit" disabled={submitting} className="btn-xp-primary w-full text-center">
+              {submitting
+                ? "Please wait..."
+                : mode === "magic-link"
+                ? "Send magic link"
+                : isSignUp
+                ? "Create account"
+                : "Sign in"}
+            </button>
+
+            {error && (
+              <div className="msg-xp-error">
+                {error}
+              </div>
+            )}
+          </form>
+
+          {/* Toggle sign in / sign up */}
+          {mode === "password" && (
+            <div className="mt-3 text-center text-xs text-gray-600">
+              {isSignUp ? (
+                <>
+                  Already have an account?{" "}
+                  <button onClick={() => { setIsSignUp(false); setError(null); }}
+                    className="text-xp-blue-500 font-bold hover:text-xp-blue-700 underline">
+                    Sign in
+                  </button>
+                </>
+              ) : (
+                <>
+                  Don&apos;t have an account?{" "}
+                  <button onClick={() => { setIsSignUp(true); setError(null); }}
+                    className="text-xp-blue-500 font-bold hover:text-xp-blue-700 underline">
+                    Sign up
+                  </button>
+                </>
+              )}
             </div>
           )}
-        </form>
+        </div>
 
-        {/* Toggle sign in / sign up (only for password mode) */}
-        {mode === "password" && (
-          <div className="mt-4 text-center text-sm text-gray-600">
-            {isSignUp ? (
-              <>
-                Already have an account?{" "}
-                <button onClick={() => { setIsSignUp(false); setError(null); }}
-                  className="text-old-blue-500 font-bold hover:text-old-blue-700">
-                  Sign in
-                </button>
-              </>
-            ) : (
-              <>
-                Don&apos;t have an account?{" "}
-                <button onClick={() => { setIsSignUp(true); setError(null); }}
-                  className="text-old-blue-500 font-bold hover:text-old-blue-700">
-                  Sign up
-                </button>
-              </>
-            )}
-          </div>
-        )}
+        {/* Status bar */}
+        <div className="border-t border-black bg-xp-silver-300 px-2 py-0.5 text-[10px] text-gray-600 flex items-center justify-between shadow-xp-sunken">
+          <span>Ready</span>
+          <span>
+            {mode === "password"
+              ? isSignUp ? "Sign up mode" : "Sign in mode"
+              : "Magic link mode"}
+          </span>
+        </div>
+      </div>
+
+      {/* 88x31 decorative badges */}
+      <div className="hidden sm:flex flex-col gap-1 ml-4">
+        <span className="badge-88x31 bg-xp-blue-500 text-white">HABIT TRACKER</span>
+        <span className="badge-88x31 bg-retro-cyan text-black">STREAKS</span>
+        <span className="badge-88x31 bg-xp-green-500 text-white">CHECK IN!</span>
+        <span className="badge-88x31 bg-xp-gold text-black">Y2K 2000</span>
       </div>
     </div>
   );
